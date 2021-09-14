@@ -23,6 +23,25 @@ nxtBtn.addEventListener('click', () => {
   // getComic(currPage)
 });
 
+function getComic() {
+  qty = comicQty.value;
+
+  // Store all existing img and title HTML elements to an object 
+  allComicImg = document.querySelectorAll('[id^="comic-img-"]');
+  allTitleElem = document.querySelectorAll('[id^="comic-title-"]');
+  
+  page = currPage;
+  [...allComicImg].forEach((img, idx) => {
+    fetch(`https://xkcd.now.sh/?comic=${page}`)
+    .then((response) => response.json())
+    .then((result) => {
+      img.src = result.img;
+      allTitleElem[idx].innerHTML = result.title;
+    })
+    page++
+  });
+}
+
 // Create comic img elements according to the value of the select element
 function generateComic(comicQty) {
   // Remove previously generated comics
