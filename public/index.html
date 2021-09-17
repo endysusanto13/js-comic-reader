@@ -24,14 +24,19 @@
     <button id="random-btn" type="button">Random</button>
     <button id="next-btn" type="button">Next</button>
 
-    <select id="comic-qty">
+    <select id="page-num-select">
       <option value="1">1</option>
       <option value="3" selected="selected">3</option>
       <option value="5">5</option>
     </select>    
+    <label>Go to page number:
+      <input type="number" id="page-input" min="1" max="2500" placeholder="Available pages: 1-2500">
+    </label>
+    <button id="go-to-btn" type="button">Submit</button>
   </div>
-  <div class="comic-title"></div>
-  <div class="comic-img"></div>
+  <div class="title"></div>
+  <div class="img"></div>
+  <div class="page-number-text"></div>
   <script src="js/index.js"></script>
 </body>
 </html>
