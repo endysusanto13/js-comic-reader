@@ -8,6 +8,9 @@ const prevBtn = document.querySelector('#prev-btn');
 const randomBtn = document.querySelector('#random-btn');
 const nxtBtn = document.querySelector('#next-btn');
 
+const goToInput = document.querySelector('#page-input');
+const goToBtn = document.querySelector('#go-to-btn');
+
 // Change the number of comics displayed according to user's selection
 pageNumElem.addEventListener('change', () => {
   generateComicElements();
@@ -28,6 +31,20 @@ randomBtn.addEventListener('click', () => {
 
 nxtBtn.addEventListener('click', () => {
   currentPage += parseInt(pageNum);
+  console.log(`Current page is ${currentPage}`);
+  getComic();
+});
+
+goToBtn.addEventListener('click', () => {
+  const userInputPage = goToInput.value
+  
+  // Restrict user input to only available pages
+  if (userInputPage < 1 || userInputPage > maxPage) {
+    alert(`Invalid input. Please enter pages ranging from 0 - ${maxPage}`);
+    return
+  }
+
+  currentPage = parseInt(userInputPage);
   console.log(`Current page is ${currentPage}`);
   getComic();
 });
@@ -112,5 +129,9 @@ fetch(`https://xkcd.vercel.app/?comic=latest`)
   generateComicElements();
   maxPage = parseInt(result.num);
   goToInput.max = maxPage;
+  goToInput.placeholder = `Available pages: 1-${maxPage}`;
   getComic();
+})
+.catch(e => {
+  console.log('Fetch is encountering issues:' + e.message);
 });
