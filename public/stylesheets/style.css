@@ -152,7 +152,7 @@ div.page-number {
 img {
   padding: 0px 20px;
   max-height: 1000px;
-  max-width: 500px;
+  max-width: 600px;
 }
 
 p.title {
@@ -161,9 +161,11 @@ p.title {
   margin: auto;
   padding: 10px 15px;
   color: white;
-  font-size: 24px;
+  font-size: 22px;
   text-align: center;
   text-decoration: underline;
+  font-weight: bold;
+  letter-spacing: 1px;
 }
 
 p.page-number {
@@ -172,7 +174,7 @@ p.page-number {
   margin: auto;
   padding: 5px 20px;
   color: white;
-  font-size: 24px;
+  font-size: 22px;
   text-align: center;
   font-weight: bold;
 }

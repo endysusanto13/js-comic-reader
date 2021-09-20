@@ -1,9 +1,10 @@
+(function main() {
 let currentPage = 2;
 let maxPage = 2500;
 
 /** SELECTORS SECTION */
 const pageNumElem = document.querySelector("#page-num-select");
-let pageNum = pageNumElem.value;
+let pageNum = parseInt(pageNumElem.value);
 
 const prevBtn = document.querySelector('#prev-btn');
 const randomBtn = document.querySelector('#random-btn');
@@ -17,12 +18,13 @@ const goToBtn = document.querySelector('#go-to-btn');
 
 // Change the number of comics displayed according to user's selection
 pageNumElem.addEventListener('change', () => {
+  pageNum = parseInt(pageNumElem.value);
   generateComicElements();
   getComic();
 });
 
 prevBtn.addEventListener('click', () => {
-  currentPage -= parseInt(pageNum);
+  currentPage -= pageNum;
   console.log(`Current page is ${currentPage}`);
   getComic();
 });
@@ -35,9 +37,20 @@ randomBtn.addEventListener('click', () => {
 });
 
 nxtBtn.addEventListener('click', () => {
-  currentPage += parseInt(pageNum);
+  currentPage += pageNum;
   console.log(`Current page is ${currentPage}`);
   getComic();
+});
+
+// Press "Go" button when user press Enter key at text input
+goToInput.addEventListener("keyup", function(event) {
+  // Number 13 is the "Enter" key on the keyboard
+  if (event.keyCode === 13) {
+    // Cancel the default action, if needed
+    event.preventDefault();
+    // Trigger the button element with a click
+    goToBtn.click();
+  }
 });
 
 goToBtn.addEventListener('click', () => {
@@ -54,7 +67,7 @@ goToBtn.addEventListener('click', () => {
   getComic();
 });
 
-/** FUNCTION SECTION */
+/** MAIN FUNCTION SECTION */
 
 function getComic() {
   // Store all existing img and title HTML elements to an object 
@@ -73,7 +86,7 @@ function getComic() {
         if viewing last comic page, next page will be the first page
     */
     if (page < 0 || page > maxPage) { fetchedPage = (maxPage + page) % maxPage; }
-    else if (page == 0) { fetchedPage = maxPage; };
+    else if (page === 0) { fetchedPage = maxPage; };
 
     img.src = "images/loading-small.gif";
 
@@ -93,63 +106,49 @@ function getComic() {
 
 // Create comic img elements according to the value of the select element
 function generateComicElements() {
-  pageNum = pageNumElem.value;
-
   // Remove previously generated comics
-  allSubDiv = document.querySelectorAll('[id^="comic-container-"]');
-  alltitleDiv = document.querySelectorAll('[id^="title-container-"]');
-  allcomicDiv = document.querySelectorAll('[id^="img-container-"]');
-  allpageNumDiv = document.querySelectorAll('[id^="page-number-container-"]');
-  allComicImg = document.querySelectorAll('[id^="comic-img-"]');
-  allTitleElem = document.querySelectorAll('[id^="comic-title-"]');
-  allPageNumText = document.querySelectorAll('[id^="comic-page-number-"]');
-  [...allSubDiv,...alltitleDiv,...allcomicDiv,...allpageNumDiv, ...allTitleElem, ...allPageNumText].forEach((element) => { element.remove(); });
+  const idToDelete = [
+    "comic-container-",
+    "title-container-",
+    "img-container-",
+    "page-number-container-",
+    "comic-img-",
+    "comic-title-",
+    "comic-page-number-",
+  ];
+  deleteElementsWithID(idToDelete);
 
   const bodyDiv = document.querySelector("#container-body");
 
-  if (pageNum == 1) {
-    bodyDiv.classList.add("center")
-    bodyDiv.classList.remove("space-between")
+  if (pageNum === 1) {
+    bodyDiv.classList.add("center");
+    bodyDiv.classList.remove("space-between");
 
   } else {
-    bodyDiv.classList.remove("center")
-    bodyDiv.classList.add("space-between")
+    bodyDiv.classList.remove("center");
+    bodyDiv.classList.add("space-between");
   }
-  
+
   // Generate HTML element(s) for each comic page
   for (let num = 1; num <= pageNum; num++) {
 
     // Generate a div container and 3 div sub-containers
-    const subDiv = document.createElement("div");
-    subDiv.setAttribute("id", `comic-container-${num}`);
-    subDiv.classList.toggle("comic-container")
+    const subDiv = generateDiv("comic-container-", num);
+    const titleDiv = generateDiv("title-container-", num);
+    const comicDiv = generateDiv("img-container-", num);
+    const pageNumDiv = generateDiv("page-number-container-", num);
+
     bodyDiv.appendChild(subDiv);
-    
-    const titleDiv = document.createElement("div");
-    titleDiv.setAttribute("id", `title-container-${num}`);
-    titleDiv.classList.toggle("title")
-    subDiv.appendChild(titleDiv);
-    
-    const comicDiv = document.createElement("div");
-    comicDiv.setAttribute("id", `img-container-${num}`);
-    comicDiv.classList.toggle("comic-img")
-    subDiv.appendChild(comicDiv);
-
-    const pageNumDiv = document.createElement("div");
-    pageNumDiv.setAttribute("id", `page-number-container-${num}`);
-    pageNumDiv.classList.toggle("page-number")
-    subDiv.appendChild(pageNumDiv);
-
+    appendChildren(subDiv, [titleDiv, comicDiv, pageNumDiv]);
+    toggleClasses([subDiv, titleDiv, comicDiv, pageNumDiv],
+                  ["comic-container", "title", "comic-img", "page-number"]);
 
     // Generate comic title(s)
-    // const titleDiv = document.querySelector("div.title-container");
     const titleElem = document.createElement("p");
     titleDiv.appendChild(titleElem);
-    titleElem.classList.toggle("title")
     titleElem.setAttribute("id", `comic-title-${num}`);
 
     // Generate comic img(s)
-    // const comicDiv = document.querySelector("div.img-container");
     const comicImg = document.createElement("img");
     comicDiv.appendChild(comicImg);
     comicImg.setAttribute("src", "images/loading-small.gif");
@@ -157,17 +156,38 @@ function generateComicElements() {
     comicImg.setAttribute("alt", "xkcd comic");
 
     // Generate page number(s)
-    // const pageNumDiv = document.querySelector("div.page-number-container");
     const pageNumText = document.createElement("p");
     pageNumDiv.appendChild(pageNumText);
-    pageNumText.classList.toggle("page-number")
     pageNumText.setAttribute("id", `comic-page-number-${num}`);
 
-    // #FIXME - Use array to query all div and create elements
+    toggleClasses([titleElem, pageNumText],
+                  ["title", "page-number"]);
   }
-
-
 };
+
+/** HELPER FUNCTION SECTION */
+
+// Deletes all elements that has ID starting with the value of the string in the input array
+function deleteElementsWithID(idArray) {
+  idArray.forEach((id) => { 
+    allElem = document.querySelectorAll(`[id^=${id}]`);
+    allElem.forEach((element) => { element.remove() });
+  });
+}
+
+function generateDiv(id, num) {
+  const div = document.createElement("div");
+  div.setAttribute("id", id + num);
+  return div;
+}
+
+function appendChildren(parentDiv, childDivArr) { 
+  childDivArr.forEach((childDiv) => { parentDiv.appendChild(childDiv) });
+}
+
+function toggleClasses(elementArr, classArr) { 
+  [...elementArr].forEach((element, idx) => { element.classList.toggle(classArr[idx]) });
+}
 
 /** ONLOAD FUNCTION SECTION */
 
@@ -184,3 +204,5 @@ fetch(`https://xkcd.vercel.app/?comic=latest`)
   .catch(e => {
     console.log('Fetch is encountering issues:' + e.message);
   });
+
+})();
