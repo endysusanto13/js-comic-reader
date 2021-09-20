@@ -3,40 +3,40 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
-
   <title>JavaScript xkcd Comic Reader</title>
-  <!-- <meta name="description" content="A simple HTML5 Template for new projects.">
-  <meta name="author" content="SitePoint">
-
-  <meta property="og:title" content="A Basic HTML5 Template">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.sitepoint.com/a-basic-html5-template/">
-  <meta property="og:description" content="A simple HTML5 Template for new projects.">
-  <meta property="og:image" content="image.png"> -->
-
   <link rel="stylesheet" href="stylesheets/style.css">
 </head>
 <body>
-  <!-- your content here... -->
-  <div class="top">
-    <button id="prev-btn" type="button">Previous</button>
-    <button id="random-btn" type="button">Random</button>
-    <button id="next-btn" type="button">Next</button>
-
-    <select id="page-num-select">
-      <option value="1">1</option>
-      <option value="3" selected="selected">3</option>
-      <option value="5">5</option>
-    </select>    
-    <label>Go to page number:
-      <input type="number" id="page-input" min="1" max="2500" placeholder="Available pages: 1-" style="width: 200px">
-    </label>
-    <button id="go-to-btn" type="button">Go</button>
+  <div id="container-main">
+    <!-- HEADER -->
+    <div id="container-header">
+      <div id="container-input">
+        <label>Go to page number:
+          <input type="number" id="page-input" min="1" max="2500" placeholder="1-">
+        </label>
+        <button id="go-to-btn" class="button-54">Go</button>
+      </div>
+      <div id="container-buttons">
+        <button id="prev-btn" class="button-54"><< Prev</button>
+        <button id="random-btn" class="button-54">Random</button>
+        <button id="next-btn" class="button-54">Next >></button>
+      </div>
+      <div id="container-select">
+        <label>No. of comics per page:</label>  
+        <select id="page-num-select">
+          <option value="1">1</option>
+          <option value="3" selected="selected">3</option>
+          <option value="5">5</option>
+        </select>    
+      </div>
+    </div>
+    <!-- BODY -->
+    <div id="container-body"></div>
+    <!-- FOOTER -->
+    <div id="container-footer">
+      Credits to <a href="https://xkcd.com/">xkcd.com</a>
+    </div>
   </div>
-  <div class="title"></div>
-  <div class="img"></div>
-  <div class="page-number-text"></div>
   <script src="js/index.js"></script>
 </body>
 </html>
